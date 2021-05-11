@@ -3,7 +3,6 @@
 #include <fstream>
 #include <string>
 #include <vector>
-#include <typeinfo>
 
 #define vs vector<string>
 
@@ -29,6 +28,8 @@ class ToDoList{
         // methodes
         void showList(){
             system("CLS");
+            cout << "-----------------------" << endl;
+            cout << "| " << pemilik << " |" << endl;
             cout << "-----------------------" << endl;
             int i = 1;
             for(string lol : list){
@@ -67,7 +68,10 @@ class ToDoList{
         }
 };
 
-int main(){
+
+
+void initNote(string akun){
+    system("CLS");
     infile.open("save.txt");
 
     string todo;
@@ -80,10 +84,20 @@ int main(){
 
     infile.close();
 
-    ToDoList mylist("Araeiou", 10, in);
+    string profNama = "";
+    for(auto x: akun){
+        if(x != ' '){
+            profNama += x;
+        } else {
+            break;
+        }
+    }
 
+    ToDoList mylist(profNama, 10, in);
+    mylist.showList();
     while(true){
-        string command;
+        string command = "";
+        cout << "-> ";
         getline(cin, command);
         
         if(command == "exit"){
@@ -98,6 +112,7 @@ int main(){
                 break;
             }
         }
+
         if(word == "add"){
             cout << "add detected" << endl;
             command = command.erase(0,4);
@@ -118,11 +133,51 @@ int main(){
             mylist.swapList(sb, se);
         } else if (word == "clear"){
             mylist.clearAll();
-        } else {
+        } else if(command != ""){
             cout << "no command found - check for typos" << endl;
         }
+
     }
 
     mylist.save();
-    return 0;
+ 
+}
+
+void initSignUp(){
+    system("CLS");
+    cout << "SELAMAT DATANG DI TO DO LIST" << endl;
+    cout << "made by wazeazure" << endl;
+    cout << "-----------------------------" << endl << endl;
+
+    cout << "silahkan bikin akun dengan masukkan nama anda" << endl;
+
+    string nama;
+    cin >> nama;
+    outfile.open("akun.txt");
+    outfile << nama;
+    outfile.close();
+    cout << "Halo " << nama << endl;
+    system("PAUSE");
+    initNote(nama);
+}
+
+int main(){
+    string akun;
+    infile.open("akun.txt");
+
+    if(infile.is_open()){
+        cout << "work" << endl;
+        infile >> akun;
+        infile.close();
+        initNote(akun);
+    } else {
+        infile.close();
+        outfile.open("akun.txt");
+        outfile.close();
+        outfile.open("save.txt");
+        outfile.close();
+        initSignUp();
+    }
+
+   return 0;
 }
